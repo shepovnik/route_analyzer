@@ -135,17 +135,11 @@ def main():
     df = pd.read_csv(INPUT_FILE)
     print(f"  ✓ Загружено {len(df)} строк")
 
-    # 1. Чистка выбросов
-    df = clean_elevation_outliers(df)
+    df = clean_elevation_outliers(df) # 1. Чистка выбросов
+    df = add_synthetic_hills(df) # 2. Холмы
+    df = recompute_slope(df) # 3. Уклон
 
-    # 2. Холмы
-    df = add_synthetic_hills(df)
-
-    # 3. Уклон
-    df = recompute_slope(df)
-
-    # 4. Сохранение
-    print(f"→ Сохранение в {OUTPUT_FILE}...")
+    print(f"→ Сохранение в {OUTPUT_FILE}...") # 4. Сохранение
     df.to_csv(OUTPUT_FILE, index=False, float_format="%.4f")
     print(f"  ✓ Готово")
 

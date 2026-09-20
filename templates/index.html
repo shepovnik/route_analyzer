@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Analyzer — Миасс → Екатеринбург</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Наши стили -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+    <!-- Заголовок -->
+    <header class="app-header">
+        <div class="header-content">
+            <h1>Route Analyzer</h1>
+            <p class="subtitle">Миасс → Екатеринбург · цифровая модель местности · CAN-данные · ИИ-восстановление</p>
+        </div>
+    </header>
+
+        <!-- Основная область: карта + панель -->
+        <!-- Основная область -->
+    <main class="app-main">
+
+        <!-- Карта (слева, на всю высоту) -->
+        <div class="map-wrapper">
+            <div id="map"></div>
+
+            <div class="controls">
+                <button id="btn-start" class="btn btn-primary" title="Запустить анимацию">
+                    ▶ Старт
+                </button>
+                <button id="btn-pause" class="btn btn-secondary" title="Пауза" disabled>
+                    ⏸ Пауза
+                </button>
+                <button id="btn-reset" class="btn btn-secondary" title="В начало">
+                    ⟲ Сброс
+                </button>
+
+                <div class="speed-control">
+                    <label for="speed-slider">Скорость:</label>
+                    <input type="range" id="speed-slider" min="1" max="200" value="10" step="1" />
+                    <span id="speed-value" class="speed-value">×10</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая колонка: 4 карточки -->
+       <aside class="sidebar">
+
+    <!-- Верхний ряд: две карточки рядом -->
+    <div class="sidebar-top">
+        <div class="card">
+            <h2>Текущие показатели</h2>
+            <div class="metric">
+                <span class="metric-label">Скорость</span>
+                <span class="metric-value" id="m-speed">—</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Время в пути</span>
+                <span class="metric-value" id="m-time">—</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Расход</span>
+                <span class="metric-value" id="m-fuel">—</span>
+            </div>
+            <div class="metric">
+                <span class="metric-label">Оптимальная скорость</span>
+                <span class="metric-value" id="m-vopt">—</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Маршрут</h2>
+            <p class="loading">Загрузка данных...</p>
+        </div>
+    </div>
+
+    <!-- График высоты -->
+    <div class="chart-card">
+        <h2>Высота над уровнем моря</h2>
+        <div id="chart-elevation" class="chart">График появится после подключения Plotly</div>
+    </div>
+
+    <!-- График уклона -->
+    <div class="chart-card">
+        <h2>Уклон дороги</h2>
+        <div id="chart-slope" class="chart">График появится после подключения Plotly</div>
+    </div>
+
+</aside>
+
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Наш скрипт -->
+    <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+</body>
+</html>

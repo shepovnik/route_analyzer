@@ -79,16 +79,16 @@
         </div>
     </div>
 
-    <!-- График высоты -->
+    <!-- График скорости -->
     <div class="chart-card">
-        <h2>Высота над уровнем моря</h2>
-        <div id="chart-elevation" class="chart">График появится после подключения Plotly</div>
+        <h2>Скорость</h2>
+        <div id="chart-speed" class="chart"></div>
     </div>
 
     <!-- График уклона -->
     <div class="chart-card">
         <h2>Уклон дороги</h2>
-        <div id="chart-slope" class="chart">График появится после подключения Plotly</div>
+        <div id="chart-slope" class="chart"></div>
     </div>
 
 </aside>
@@ -97,6 +97,9 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Plotly JS (для графиков) -->
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
 
     <!-- Наш скрипт -->
     <script src="{{ url_for('static', filename='js/map.js') }}"></script>

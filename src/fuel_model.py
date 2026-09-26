@@ -122,7 +122,7 @@ def add_fuel_columns(df):
     else:
         pred = np.zeros(len(df))
         print("  ⚠ Колонка slope_predicted_next_deg не найдена — берём 0")
-    df["v_optimal_kmh"] = v_optimal_adaptive(alpha, pred)
+    df["v_optimal_kmh"] = df["v_optimal_kmh"].rolling(window=100, center=True, min_periods=1).mean()
 
     return df
 

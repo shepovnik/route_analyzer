@@ -1,17 +1,30 @@
 /* ============================================================
-   ПАЛИТРА (оливково-молочная)
+   ПАЛИТРА (оливково-молочная + терракота)
    ============================================================ */
 :root {
+    /* Основные */
     --bg-cream: #FAF7F0;
     --bg-card: #FFFFFF;
+
+    /* Оливковые */
     --olive-light: #E9EDC9;
     --olive-mid: #A3B18A;
     --olive-dark: #6B8E23;
+
+    /* Терракотовые акценты */
+    --terracotta: #C97B5A;
+    --terracotta-dark: #A05A3E;
+    --terracotta-light: #F2D9CC;
+
+    /* Текст */
     --text-dark: #3A3A2E;
     --text-gray: #7A7A6E;
+
+    /* Границы и тени */
     --border: #DAD7C7;
     --shadow: 0 4px 16px rgba(107, 142, 35, 0.08);
     --shadow-hover: 0 6px 24px rgba(107, 142, 35, 0.15);
+    --shadow-terracotta: 0 4px 16px rgba(201, 123, 90, 0.2);
 }
 
 /* ============================================================
@@ -61,7 +74,6 @@ html, body {
 /* ============================================================
    ОСНОВНАЯ ОБЛАСТЬ
    ============================================================ */
-
 .app-main {
     display: flex;
     height: calc(100vh - 72px);
@@ -70,7 +82,7 @@ html, body {
 /* Карта (слева, на всю высоту) */
 .map-wrapper {
     flex: 1;
-    max-width: 60%;        /* ограничиваем ширину карты 60% */
+    max-width: 60%;
     position: relative;
     min-width: 0;
     min-height: 0;
@@ -82,8 +94,9 @@ html, body {
     background: var(--olive-light);
 }
 
-/* Сайдбар (справа, 4 карточки) */
-/* Правая зона: сайдбар с двумя рядами */
+/* ============================================================
+   САЙДБАР
+   ============================================================ */
 .sidebar {
     flex: 1;
     min-width: 480px;
@@ -96,7 +109,7 @@ html, body {
     gap: 12px;
 }
 
-/* Верхний ряд: две карточки рядом (Текущие показатели | Маршрут) */
+/* Верхний ряд: две карточки рядом */
 .sidebar-top {
     display: flex;
     gap: 12px;
@@ -106,7 +119,9 @@ html, body {
     flex: 1;
 }
 
-/* Обычные карточки (метрики, маршрут) */
+/* ============================================================
+   КАРТОЧКИ
+   ============================================================ */
 .card {
     background: var(--bg-card);
     border-radius: 12px;
@@ -120,14 +135,47 @@ html, body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--olive-dark);
+    color: var(--terracotta-dark);     /* ← терракотовый заголовок */
     margin-bottom: 10px;
 }
 
-/* Карточки с графиками — растягиваются */
+.loading {
+    color: var(--text-gray);
+    font-size: 14px;
+    font-style: italic;
+}
+
+/* Метрики */
+.metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.metric:last-child {
+    border-bottom: none;
+}
+
+.metric-label {
+    font-size: 13px;
+    color: var(--text-gray);
+}
+
+.metric-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--terracotta);          /* ← терракотовые цифры */
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   КАРТОЧКИ С ГРАФИКАМИ
+   ============================================================ */
 .chart-card {
-    flex: 1;                     /* растягивается как и другие карточки */
-    min-height: 180px;
+    flex: 1;
+    min-height: 200px;
     background: var(--bg-card);
     border-radius: 12px;
     padding: 14px 16px;
@@ -135,6 +183,7 @@ html, body {
     border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .chart-card h2 {
@@ -142,24 +191,21 @@ html, body {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--olive-dark);
+    color: var(--terracotta-dark);     /* ← терракотовый заголовок */
     margin-bottom: 8px;
 }
 
+/* Контейнер графика */
 .chart {
     flex: 1;
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-gray);
-    font-style: italic;
-    font-size: 13px;
+    width: 100%;
+    min-height: 0;
+    position: relative;
 }
+
 /* ============================================================
    ПАНЕЛЬ УПРАВЛЕНИЯ
    ============================================================ */
-
 .controls {
     position: absolute;
     bottom: 24px;
@@ -189,14 +235,15 @@ html, body {
     color: white;
 }
 
+/* Кнопка "Старт" — терракотовая */
 .btn-primary {
-    background: linear-gradient(135deg, #A3B18A 0%, #6B8E23 100%);
-    box-shadow: 0 2px 8px rgba(107, 142, 35, 0.3);
+    background: linear-gradient(135deg, #C97B5A 0%, #A05A3E 100%);
+    box-shadow: 0 2px 8px rgba(201, 123, 90, 0.35);
 }
 
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(107, 142, 35, 0.4);
+    box-shadow: 0 4px 12px rgba(201, 123, 90, 0.5);
 }
 
 .btn-secondary {
@@ -229,81 +276,21 @@ html, body {
 
 #speed-slider {
     width: 120px;
-    accent-color: var(--olive-dark);
+    accent-color: var(--terracotta);   /* ← терракотовый ползунок */
 }
 
 .speed-value {
     font-size: 14px;
     font-weight: 600;
-    color: var(--olive-dark);
+    color: var(--terracotta-dark);     /* ← терракотовое значение */
     min-width: 45px;
     text-align: right;
     font-variant-numeric: tabular-nums;
 }
 
 /* ============================================================
-   БОКОВАЯ ПАНЕЛЬ
+   СКРОЛЛБАР САЙДБАРА
    ============================================================ */
-.sidebar {
-    width: 360px;
-    background: var(--bg-cream);
-    border-left: 1px solid var(--border);
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.card {
-    background: var(--bg-card);
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-}
-
-.card h2 {
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--olive-dark);
-    margin-bottom: 14px;
-}
-
-.loading {
-    color: var(--text-gray);
-    font-size: 14px;
-    font-style: italic;
-}
-
-/* Метрики */
-.metric {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-}
-
-.metric:last-child {
-    border-bottom: none;
-}
-
-.metric-label {
-    font-size: 13px;
-    color: var(--text-gray);
-}
-
-.metric-value {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--olive-dark);
-    font-variant-numeric: tabular-nums;
-}
-
-/* Скроллбар боковой панели */
 .sidebar::-webkit-scrollbar {
     width: 6px;
 }
@@ -314,9 +301,8 @@ html, body {
 }
 
 /* ============================================================
-   МАРКЕР ТС
+   МАРКЕР ТС (терракотовый)
    ============================================================ */
-
 .vehicle-marker-wrap {
     background: transparent;
     border: none;
@@ -325,10 +311,10 @@ html, body {
 .vehicle-marker {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, #A3B18A 0%, #6B8E23 100%);
+    background: linear-gradient(135deg, #C97B5A 0%, #A05A3E 100%);
     border-radius: 50%;
     border: 3px solid #FFFFFF;
-    box-shadow: 0 4px 12px rgba(107, 142, 35, 0.5);
+    box-shadow: 0 4px 12px rgba(201, 123, 90, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;

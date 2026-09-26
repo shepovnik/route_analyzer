@@ -91,8 +91,55 @@
         <div id="chart-slope" class="chart"></div>
     </div>
 
-</aside>
 
+    <!-- Спидометр -->
+    <div class="chart-card speedometer-card">
+        <h2>Спидометр</h2>
+        <div class="speedometer">
+            <svg viewBox="0 0 200 140" class="speedo-svg">
+                <!-- Фоновая серая дуга (от 180° до 0°, через верх) -->
+                <path d="M 20 110 A 80 80 0 0 1 180 110" 
+                    fill="none" stroke="#E9EDC9" stroke-width="14" stroke-linecap="round"/>
+                
+                <!-- Зелёная зона: 0-60 км/ч (левый сегмент, от 180° до 144°) -->
+                <path d="M 20 110 A 80 80 0 0 1 45 48" 
+                    fill="none" stroke="#6B8E23" stroke-width="14" stroke-linecap="round"/>
+                
+                <!-- Жёлтая зона: 60-85 (от 144° до 108°) -->
+                <path d="M 45 48 A 80 80 0 0 1 96 31" 
+                    fill="none" stroke="#D4A72C" stroke-width="14" stroke-linecap="round"/>
+                
+                <!-- Красная зона: 85-120 (от 108° до 72°, правый сегмент) -->
+                <path d="M 96 31 A 80 80 0 0 1 180 110" 
+                    fill="none" stroke="#C97B5A" stroke-width="14" stroke-linecap="round"/>
+                
+                <!-- Стрелка (исходно направлена ВВЕРХ из центра) -->
+                <g id="speedo-needle" transform="rotate(-90 100 110)">
+                    <line x1="100" y1="110" x2="100" y2="70" 
+                        stroke="#3A3A2E" stroke-width="3.5" stroke-linecap="round"/>
+                </g>
+                
+                <!-- Центральная точка -->
+                <circle cx="100" cy="110" r="7" fill="#3A3A2E"/>
+                <circle cx="100" cy="110" r="3" fill="#FFFFFF"/>
+                
+                <!-- Метка оптимальной скорости (по умолчанию вне видимости) -->
+                <circle id="speedo-opt-marker" cx="100" cy="30" r="6" 
+                        fill="#FFFFFF" stroke="#6B8E23" stroke-width="3"/>
+                
+                <!-- Крупная цифра внизу под дугой -->
+                <!-- Крупная цифра внутри дуги -->
+                <text x="100" y="82" text-anchor="middle" 
+                    font-size="32" font-weight="700" fill="#C97B5A"
+                    id="speedo-value">0</text>
+                <text x="100" y="98" text-anchor="middle" 
+                    font-size="10" fill="#7A7A6E">км/ч</text>
+            </svg>
+            <!-- Подсказка внизу -->
+            <div class="speedo-hint" id="speedo-hint">Ровный участок</div>
+        </div>
+    </div>
+    </aside>
     </main>
 
     <!-- Leaflet JS -->

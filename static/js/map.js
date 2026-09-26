@@ -189,7 +189,7 @@ function tick() {
 
 function updateVehicleMarker() {
     const p = routeData.points[currentIndex];
-
+    map.panTo([p.lat, p.lon], { animate: true, duration: 0.3 });
     if (!vehicleMarker) {
         createVehicleMarker();
         return;
@@ -238,6 +238,7 @@ function updateSidebarLive() {
     document.getElementById('m-time').textContent = formatTime(p.time_s);
     document.getElementById('m-fuel').textContent = `${p.fuel_lp100km.toFixed(1)} л/100км`;
     document.getElementById('m-vopt').textContent = `${p.v_opt.toFixed(1)} км/ч`;
+    updateSpeedometer();
 }
 
 /* ============================================================
@@ -593,10 +594,95 @@ function updateChartsMarkers() {
 }
 
 /* ============================================================
+   ОБНОВЛЕНИЕ СПИДОМЕТРА
+   ============================================================ */
+
+function updateSpeedometer() {
+    const p = routeData.points[currentIndex];
+
+    // 1. Стрелка — угол от -90° (0) до +90° (120)
+    const MAX_SPEED = 120;
+    const angle = -90 + (Math.min(p.speed, MAX_SPEED) / MAX_SPEED) * 180;
+    const needle = document.getElementById('speedo-needle');
+    if (needle) {
+        needle.setAttribute('transform', `rotate(${angle} 100 110)`);
+    }
+
+    // 2. Цифра скорости
+    const valueEl = document.getElementById('speedo-value');
+    if (valueEl) {
+        valueEl.textContent = Math.round(p.speed);
+    }
+
+    // 3. Метка оптимальной скорости на дуге
+    const optAngle = -90 + (Math.min(p.v_opt, MAX_SPEED) / MAX_SPEED) * 180;
+    const optRad = optAngle * Math.PI / 180;
+    const R = 80;  // радиус дуги
+    const cx = 100, cy = 110;
+    const markerX = cx + R * Math.sin(optRad);
+    const markerY = cy - R * Math.cos(optRad);
+
+    const marker = document.getElementById('speedo-opt-marker');
+    if (marker) {
+        marker.setAttribute('cx', markerX);
+        marker.setAttribute('cy', markerY);
+    }
+
+    // 4. Подсказка
+    updateSpeedoHint(p);
+}
+
+/* ============================================================
+   ЛОГИКА ПОДСКАЗКИ
+   ============================================================ */
+
+function updateSpeedoHint(p) {
+    const hint = document.getElementById('speedo-hint');
+    if (!hint) return;
+
+    const slope = p.slope_pred;      // прогноз уклона
+    const diff = p.speed - p.v_opt;  // разница с оптимальной
+
+    let text = '';
+    let cls = '';
+
+    // Сначала — приоритет по уклону
+    if (slope > 3) {
+        text = 'Впереди крутой подъём — замедлитесь!';
+        cls = 'hint-danger';
+    } else if (slope > 1.5) {
+        text = 'Впереди подъём — снизьте скорость';
+        cls = 'hint-warn';
+    } else if (slope < -3) {
+        text = 'Впереди крутой спуск — будьте осторожны';
+        cls = 'hint-warn';
+    } else if (slope < -1.5) {
+        text = 'Впереди спуск — можно ускориться';
+        cls = 'hint-ok';
+    } else {
+        // Ровный участок — проверяем, не отклоняется ли скорость от оптимальной
+        if (diff > 10) {
+            text = 'Скорость выше оптимальной';
+            cls = 'hint-warn';
+        } else if (diff < -10) {
+            text = 'Скорость ниже оптимальной';
+            cls = 'hint-warn';
+        } else {
+            text = 'Ровный участок';
+            cls = 'hint-ok';
+        }
+    }
+
+    hint.textContent = text;
+    hint.className = 'speedo-hint ' + cls;
+}
+
+/* ============================================================
    ЗАПУСК
    ============================================================ */
 
 loadRoute().then(() => {
     updateSidebarLive();
+    updateSpeedometer();
     drawAllCharts();
 });
